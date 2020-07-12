@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  recipes:
+    image: "sonatype/nexus3"
+    container_name: "nexus3"
+    expose:
+      - 8081
+    volumes:
+      - "nexus-data:/nexus-data"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.recipes.rule=Host(`$NEXUS_URL`)"
+      - "traefik.http.routers.recipes.entrypoints=websecure"
+      - "traefik.http.routers.recipes.tls.certresolver=letsencrypt"
+      - "traefik.port=8081"
+    networks:
+      - web
+    tty: true
+    restart: "always"
+
+volumes:
+  nexus-data:
+
+networks:
+  web:
+    external: true
